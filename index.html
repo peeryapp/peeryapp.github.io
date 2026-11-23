@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Peery: your files, your friends, no middleman</title>
+<meta name="description" content="Peery syncs and backs up your files directly between your devices and the people you trust. No account. No cloud. No middleman.">
+<meta name="theme-color" content="#040B14">
+<link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/dm-serif-display-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'DM Serif Display';font-style:normal;font-display:swap;src:url(fonts/dm-serif-display-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'DM Serif Display';font-style:italic;font-display:swap;src:url(fonts/dm-serif-display-latin-400-italic.woff2) format('woff2')}
+@font-face{font-family:Inter;font-weight:100 900;font-display:swap;src:url(fonts/inter-latin-wght-normal.woff2) format('woff2')}
+:root{--bg:#040B14;--ink:#E8F0FE;--dim:#8EA8C9;--mute:#4D6A8A;--teal:#4ECDC4;--amber:#F7B731;--pink:#EE3FC8;--disp:'DM Serif Display',Georgia,serif;--body:Inter,system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--body);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+main,footer{position:relative;z-index:1}
+.top{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:16px clamp(20px,5vw,56px);background:linear-gradient(rgba(4,11,20,.85),transparent)}
+.mark{font:400 38px/1 var(--disp);text-decoration:none;letter-spacing:-.01em}
+.logo{color:var(--teal)}
+.logo i{font-style:normal;color:var(--pink)}
+.te{display:inline-block;width:1.2em;height:.5023em}
+.te svg{display:block;width:100%;height:100%;overflow:visible}
+.btn{display:inline-block;text-decoration:none;font-weight:600;font-size:15px;padding:14px 26px;border-radius:14px;background:var(--teal);color:#060E1A;box-shadow:0 4px 28px rgba(78,205,196,.3);transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 36px rgba(78,205,196,.45)}
+.btn.ghost{background:rgba(255,255,255,.06);color:var(--dim);border:1px solid rgba(255,255,255,.1);box-shadow:none}
+.btn.sm{padding:9px 18px;font-size:14px;border-radius:12px}
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 24px 80px}
+h1{font:400 clamp(46px,9.5vw,118px)/1.02 var(--disp);letter-spacing:-.02em;margin:14px 0 0}
+.thread{display:block;height:2px;width:min(560px,72%);margin:26px auto 30px;background:linear-gradient(90deg,transparent,var(--teal),transparent);box-shadow:0 0 18px rgba(78,205,196,.7);transform:scaleX(0);animation:draw 1.8s .5s cubic-bezier(.7,0,.2,1) forwards}
+@keyframes draw{to{transform:scaleX(1)}}
+.lede{max-width:540px;color:var(--dim);font-size:clamp(16px,2vw,19px)}
+.cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:36px}
+.note{margin-top:40px;font-size:13px;color:var(--mute)}
+#detour{position:relative;height:100svh;min-height:600px}
+.stage{position:relative;height:100%;overflow:hidden;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.stage:focus-visible{outline:2px solid var(--teal);outline-offset:-4px}
+.hint{position:absolute;bottom:3vh;left:0;right:0;text-align:center;font-size:13px;color:var(--mute)}
+.hint::after{content:'Tap to switch'}
+@media(hover:hover){.hint::after{content:'Click to switch'}}
+#dc{position:absolute;inset:0;width:100%;height:100%}
+.kick{position:absolute;top:15vh;left:0;right:0;text-align:center;font:italic 400 clamp(20px,3vw,30px)/1.3 var(--disp);color:var(--dim);padding:0 24px}
+.cap{position:absolute;bottom:10vh;left:0;right:0;text-align:center;padding:0 24px}
+.cap h2{font:400 clamp(30px,5.4vw,62px)/1.08 var(--disp);max-width:900px;margin:0 auto}
+.cap p{color:var(--dim);margin-top:10px}
+.c2{opacity:0}.c2 h2{color:var(--teal)}
+.nos{max-width:1200px;margin:0 auto;padding:14vh clamp(24px,8vw,120px)}
+.nos>h2{font:italic 400 clamp(22px,3vw,30px)/1.3 var(--disp);color:var(--dim);margin-bottom:4vh}
+.no{display:grid;gap:8px;padding:5vh 0;border-top:1px solid rgba(255,255,255,.08)}
+@media(min-width:800px){.no{grid-template-columns:1.2fr 1fr;align-items:end;gap:48px}}
+.no h3{font:400 clamp(28px,4.4vw,52px)/1.1 var(--disp);letter-spacing:-.01em}
+.no p{color:var(--dim);max-width:420px}
+.fine{font-size:13px;line-height:1.6;color:var(--mute);max-width:640px;margin-top:2vh}
+.easy{max-width:1200px;margin:0 auto;padding:12vh clamp(24px,6vw,80px);display:grid;gap:56px;align-items:center}
+@media(min-width:900px){.easy{grid-template-columns:1.1fr .9fr}}
+.easy h2{font:400 clamp(34px,5.4vw,68px)/1.06 var(--disp)}
+.easy p{color:var(--dim);margin-top:20px;max-width:480px}
+.term{font:12px/1.9 ui-monospace,Menlo,Consolas,monospace;color:var(--mute);margin-top:28px;padding:18px 20px;border:1px solid rgba(255,255,255,.07);border-radius:14px;background:rgba(255,255,255,.02);overflow:hidden;white-space:nowrap;-webkit-mask-image:linear-gradient(#000 35%,transparent);mask-image:linear-gradient(#000 35%,transparent)}
+.phone{position:relative;justify-self:center;width:272px;height:548px;border-radius:42px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(#00010B,#02091A 55%,#071428);box-shadow:0 0 0 1px rgba(255,255,255,.08),0 40px 80px rgba(0,0,0,.7)}
+.phone>*{position:relative}
+.phone>.ff{position:absolute;width:3px;height:3px;border-radius:50%;background:#F4F7A0;box-shadow:0 0 8px 2px rgba(240,245,130,.5);animation:ff 4s ease-in-out infinite}
+@keyframes ff{50%{opacity:.1;transform:translate(6px,-8px)}}
+.pl{font:400 48px/1 var(--disp)}
+.phone .tg{font-size:12px;color:rgba(200,220,255,.6);text-align:center;margin:8px 0 26px}
+.phone .btn{width:208px;text-align:center}.phone .ghost{margin-top:10px;padding:11px 0;font-size:12px}
+.oss{text-align:center;padding:16vh 24px}
+.oss h2{font:400 clamp(40px,7vw,92px)/1.04 var(--disp)}
+.oss p{max-width:580px;margin:22px auto 0;color:var(--dim)}
+.mq{margin-top:56px;overflow:hidden;white-space:nowrap;-webkit-mask-image:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent);mask-image:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent)}
+.mq div{display:inline-block;animation:mq 45s linear infinite;font:500 16px var(--body);color:var(--mute)}
+.mq span{margin:0 40px}
+@keyframes mq{to{transform:translateX(-50%)}}
+.fin{text-align:center;padding:16vh 24px 10vh}
+.fin .meet{font:italic 400 clamp(22px,3vw,32px) var(--disp);color:var(--dim)}
+.big{font:400 clamp(84px,22vw,280px)/.9 var(--disp);letter-spacing:-.03em}
+.fin .lede{margin:22px auto 0}
+.oss .btn{margin-top:32px}
+footer{text-align:center;padding:40px 24px 56px;color:var(--mute);font-size:13px}
+.links{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
+.links a{color:var(--dim);text-decoration:none;font-size:15px;transition:color .2s}
+.links a:hover{color:var(--teal)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.thread{transform:none}}
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<nav class="top"><a class="mark logo" href="#top" aria-label="Peery home">Peery</a><a class="btn sm" href="#follow">Follow us</a></nav>
+<main id="top">
+
+<section class="hero">
+  <h1>Your files. Your friends.<br>No middleman.</h1>
+  <span class="thread" aria-hidden="true"></span>
+  <p class="lede">Peery syncs and backs up your files directly between your devices and the people you trust. There is no account to create and no cloud to pay for.</p>
+  <div class="cta"><a class="btn" href="#follow">Follow for updates</a><a class="btn ghost" href="#detour">See how it works</a></div>
+  <p class="note">Coming soon to Android, Linux, Windows and macOS.</p>
+</section>
+
+<section id="detour" aria-label="How a normal cloud sync compares with Peery">
+  <div class="stage" tabindex="0" role="button" aria-label="Switch between a typical cloud sync and Peery">
+    <canvas id="dc" aria-hidden="true"></canvas>
+    <p class="kick">Why trust a middleman with what belongs to you?</p>
+    <div class="cap c1"><h2>Today, every photo you sync takes a detour.</h2><p>Through a server you don’t own, run by someone you’ve never met.</p></div>
+    <div class="cap c2"><h2>With Peery, it just goes.</h2><p>Device to device. Nothing in the middle to trust.</p></div>
+    <p class="hint" aria-hidden="true"></p>
+  </div>
+</section>
+
+<section class="nos">
+  <h2>How Peery works</h2>
+  <div class="no"><h3>Nothing to sign up for.</h3><p>There is no email or password. One recovery phrase, held by you and nobody else, brings everything back.</p></div>
+  <div class="no"><h3>Files stay on your devices.</h3><p>Files move between your devices and the people you choose. There is no server of ours holding a copy.</p></div>
+  <div class="no"><h3>Devices connect directly.*</h3><p>When a firewall gets in the way, a relay only passes along encrypted bytes it can’t read.</p></div>
+  <p class="fine">* No middleman for your files: your devices sync directly with each other. To find each other, and to relay traffic when a firewall blocks a direct connection, they can use public Syncthing discovery and relay servers, which can see that devices are connecting but never what’s inside your files.</p>
+</section>
+
+<section class="easy">
+  <div>
+    <h2>Simple enough for anyone.</h2>
+    <p>No terminals, no config files, no key ceremonies. Big buttons, plain English and one recovery phrase. Your gran can use it as comfortably as you.</p>
+    <div class="term" aria-hidden="true">$ gpg --full-generate-key --expert<br>$ openssl enc -aes-256-cbc -pbkdf2 -in photos.tar<br>$ ssh -N -L 8384:localhost:8384 pi@home.lan<br>$ sudo vim /etc/wireguard/wg0.conf<br>$ sudo ufw allow 51820/udp</div>
+  </div>
+  <div class="phone" aria-label="Peery welcome screen">
+    <div class="pl logo" role="img" aria-label="Peery">Peery</div>
+    <div class="tg">Your files. Your friends.<br>No middleman.</div>
+    <span class="btn">Get Started</span><span class="btn ghost" style="display:none">I already have Peery</span>
+  </div>
+</section>
+
+<section class="oss">
+  <h2>Open source, so you can check.</h2>
+  <p>Peery’s code is public. Anyone can read how your files are handled, report problems or build on it. You can verify the privacy rather than take it on trust.</p>
+  <a class="btn ghost" href="https://github.com/peeryapp" rel="noopener">View on GitHub</a>
+  <div class="mq" aria-label="Built on Syncthing, Ed25519, XChaCha20-Poly1305, HKDF-SHA256 and BIP-39"><div><span>Syncthing</span><span>Ed25519</span><span>XChaCha20-Poly1305</span><span>HKDF-SHA256</span><span>BIP-39</span></div></div>
+</section>
+
+<section class="fin" id="follow">
+  <p class="meet">Meet</p>
+  <div class="big logo" role="img" aria-label="Peery">Peery</div>
+  <p class="lede">Peery is almost ready. Follow along to hear when it launches.</p>
+  <div class="cta"><a class="btn" href="https://x.com/PeeryApp" rel="noopener">Follow on X</a><a class="btn ghost" href="https://www.youtube.com/@PeeryApp" rel="noopener">Subscribe on YouTube</a></div>
+</section>
+</main>
+<footer>
+<nav class="links" aria-label="Social links"><a href="https://github.com/peeryapp" rel="noopener">GitHub</a><a href="https://www.linkedin.com/company/peery" rel="noopener">LinkedIn</a><a href="https://x.com/PeeryApp" rel="noopener">X</a><a href="https://www.youtube.com/@PeeryApp" rel="noopener">YouTube</a><a href="https://www.facebook.com/peeryapp" rel="noopener" hidden>Facebook</a></nav>
+No cookies, no trackers, no third-party requests. This page doesn’t watch you either.
+</footer>
+
+<script>
+const $=s=>document.querySelector(s),clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),R=(a,b)=>a+Math.random()*(b-a);
+const calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const ptr={x:-999,y:-999};
+addEventListener('pointermove',e=>{ptr.x=e.clientX;ptr.y=e.clientY});
+
+/**
+ * Fixed background: twinkling stars and a drifting mesh of peers.
+ * The pointer joins the mesh as one more node.
+ * @returns {() => void} Per-frame draw function.
+ */
+function sky(){
+  const c=$('#sky'),x=c.getContext('2d');let W,H,stars,peers;
+  const init=()=>{
+    const d=devicePixelRatio||1;W=innerWidth;H=innerHeight;c.width=W*d;c.height=H*d;x.setTransform(d,0,0,d,0,0);
+    stars=Array.from({length:Math.round(W*H/7000)},()=>({x:R(0,W),y:R(0,H),r:R(.3,1.5),p:R(0,6.28),s:R(.01,.03)}));
+    peers=Array.from({length:clamp(Math.round(W/65),9,24)},()=>({x:R(0,W),y:R(0,H),vx:R(-.25,.25),vy:R(-.25,.25),p:R(0,6.28)}));
+  };
+  init();addEventListener('resize',init);
+  const link=(a,b,al)=>{x.strokeStyle=`rgba(78,205,196,${al})`;x.lineWidth=.8;x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke()};
+  return()=>{
+    x.clearRect(0,0,W,H);
+    stars.forEach(s=>{s.p+=s.s;x.fillStyle=`rgba(255,255,255,${.15+.55*Math.abs(Math.sin(s.p))})`;x.beginPath();x.arc(s.x,s.y,s.r,0,6.28);x.fill()});
+    peers.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.p+=.02;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1});
+    for(let i=0;i<peers.length;i++)for(let j=i+1;j<peers.length;j++){
+      const d=Math.hypot(peers[i].x-peers[j].x,peers[i].y-peers[j].y);
+      if(d<190)link(peers[i],peers[j],(1-d/190)*.28);
+    }
+    peers.map(p=>[Math.hypot(p.x-ptr.x,p.y-ptr.y),p]).sort((a,b)=>a[0]-b[0]).slice(0,3).forEach(([d,p])=>{if(d<320)link(ptr,p,(1-d/320)*.6)});
+    peers.forEach(p=>{
+      const g=x.createRadialGradient(p.x,p.y,0,p.x,p.y,16);g.addColorStop(0,`rgba(78,205,196,${.5+.4*Math.sin(p.p)})`);g.addColorStop(1,'rgba(78,205,196,0)');
+      x.fillStyle=g;x.beginPath();x.arc(p.x,p.y,16,0,6.28);x.fill();
+      x.fillStyle='#E8FFFD';x.beginPath();x.arc(p.x,p.y,2,0,6.28);x.fill();
+    });
+    c.style.opacity=clamp(1-scrollY/(H*1.2),.22,1);
+  };
+}
+
+/**
+ * Self-playing comparison. A packet detours through a watching cloud, then the
+ * cloud dissolves and a direct thread is drawn. Each mode holds for 5 seconds
+ * and a click, tap or Enter/Space switches mode immediately.
+ * @returns {() => void} Per-frame draw function.
+ */
+function detour(){
+  const c=$('#dc'),x=c.getContext('2d'),c1=$('.c1'),c2=$('.c2');let W,H,t=0,last=performance.now(),mode=calm?1:0,p=mode,dwell=0;
+  const init=()=>{const d=devicePixelRatio||1;W=c.clientWidth;H=c.clientHeight;c.width=W*d;c.height=H*d;x.setTransform(d,0,0,d,0,0)};
+  init();addEventListener('resize',init);
+  const stage=$('#detour .stage');
+  const toggle=()=>{mode=1-mode;dwell=0;if(calm)loop()};
+  stage.addEventListener('click',toggle);
+  stage.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();toggle()}});
+  const bez=(a,b,e,f,u)=>{const v=1-u;return v*v*v*a+3*v*v*u*b+3*v*u*u*e+u*u*u*f};
+  const dot=(px,py,r,rgb,a)=>{x.fillStyle=`rgba(${rgb},${a})`;x.shadowColor=`rgb(${rgb})`;x.shadowBlur=12;x.beginPath();x.arc(px,py,r,0,6.28);x.fill();x.shadowBlur=0};
+  const node=(p,label)=>{
+    const g=x.createRadialGradient(p.x,p.y,0,p.x,p.y,26);g.addColorStop(0,'rgba(78,205,196,.55)');g.addColorStop(1,'rgba(78,205,196,0)');
+    x.fillStyle=g;x.beginPath();x.arc(p.x,p.y,26,0,6.28);x.fill();dot(p.x,p.y,6,'78,205,196',1);
+    x.fillStyle='#8EA8C9';x.font='600 13px Inter,system-ui,sans-serif';x.textAlign='center';x.fillText(label,p.x,p.y+30);
+  };
+  return()=>{
+    const now=performance.now(),dt=Math.min((now-last)/1000,.1);last=now;t+=.006;
+    dwell+=dt;if(!calm&&dwell>=6.2){mode=1-mode;dwell=0}
+    p=calm?mode:clamp(p+(mode?dt:-dt)/1.2,0,1);
+    const e=p*p*(3-2*p),al=1-e;
+    const A={x:W*.14,y:H*.58},B={x:W*.86,y:H*.58},C={x:W*.5,y:H*.3},s=Math.min(W,H)*.075;
+    const cy=(C.y+s*.9-.25*A.y)/.75;
+    x.clearRect(0,0,W,H);
+    if(al>.01){
+      x.strokeStyle=`rgba(247,183,49,${.5*al})`;x.setLineDash([5,7]);x.lineWidth=1.4;
+      x.beginPath();x.moveTo(A.x,A.y);x.bezierCurveTo(A.x,cy,B.x,cy,B.x,B.y);x.stroke();x.setLineDash([]);
+      [[-1.1,.15,.55],[-.5,-.2,.7],[.35,-.15,.75],[1.05,.12,.5],[0,.25,.6]].forEach(([ox,oy,r])=>{
+        x.fillStyle=`rgba(247,183,49,${.1*al})`;x.strokeStyle=`rgba(247,183,49,${.3*al})`;x.lineWidth=1;
+        x.beginPath();x.arc(C.x+ox*s,C.y+oy*s,r*s,0,6.28);x.fill();x.stroke();
+      });
+      const r=c.getBoundingClientRect(),ang=Math.atan2(ptr.y-r.top-C.y,ptr.x-r.left-C.x),off=s*.17;
+      x.fillStyle=`rgba(4,11,20,${.9*al})`;x.strokeStyle=`rgba(247,183,49,${.9*al})`;x.lineWidth=1.5;
+      x.beginPath();x.ellipse(C.x,C.y,s*.62,s*.34,0,0,6.28);x.fill();x.stroke();
+      x.fillStyle=`rgba(247,183,49,${al})`;x.beginPath();x.arc(C.x+Math.cos(ang)*off,C.y+Math.sin(ang)*off*.6,s*.2,0,6.28);x.fill();
+      x.fillStyle=`rgba(4,11,20,${al})`;x.beginPath();x.arc(C.x+Math.cos(ang)*off*1.2,C.y+Math.sin(ang)*off*.72,s*.09,0,6.28);x.fill();
+      x.fillStyle=`rgba(247,183,49,${.75*al})`;x.font='500 12px Inter,system-ui,sans-serif';x.textAlign='center';x.fillText('someone else’s server',C.x,C.y+s*1.5);
+      for(let i=0;i<3;i++){const u=(t+i/3)%1;dot(bez(A.x,A.x,B.x,B.x,u),bez(A.y,cy,cy,B.y,u),3,'247,183,49',al)}
+    }
+    if(e>0){
+      x.strokeStyle='rgba(78,205,196,.9)';x.lineWidth=2;x.shadowColor='#4ECDC4';x.shadowBlur=14;
+      x.beginPath();x.moveTo(A.x,A.y);x.lineTo(A.x+(B.x-A.x)*e,A.y);x.stroke();x.shadowBlur=0;
+      for(let i=0;i<4;i++){const u=(t*1.8+i/4)%1;if(u<e)dot(A.x+(B.x-A.x)*u,A.y,3.5,'78,205,196',1)}
+    }
+    node(A,'You');node(B,'Friend');
+    c1.style.opacity=clamp(1-e*2.2,0,1);c2.style.opacity=clamp(e*2.2-1.2,0,1);
+  };
+}
+
+const frames=[sky(),detour()];
+let seen=true;
+new IntersectionObserver(([e])=>{seen=e.isIntersecting}).observe($('#detour'));
+/** Runs one animation frame and schedules the next unless motion is reduced. */
+function loop(){frames[0]();if(seen)frames[1]();if(!calm)requestAnimationFrame(loop)}
+loop();
+if(calm)addEventListener('scroll',loop,{passive:true});
+
+const ph=$('.phone');
+for(let i=0;i<16;i++){const f=document.createElement('i');f.className='ff';f.style.cssText=`left:${R(5,95)}%;top:${R(4,70)}%;animation-delay:${-R(0,6)}s;animation-duration:${R(3,6)}s`;ph.prepend(f)}
+const mq=$('.mq div');mq.innerHTML+=mq.innerHTML;
+
+const TE={teal:'#4ECDC4',pink:'#EE3FC8',ice:'#E8F0FE',ink:'#071428',blush:'#FF8AD8'};
+/** Logo timelines as [progress, value] waypoints over one looping cycle. */
+const TW={
+  packet:[[0,0],[.05,0],[.3,1],[.55,1],[.8,0],[1,0]],
+  speech:[[0,0],[.05,1],[.25,1],[.32,0],[1,0]],
+  blush:[[0,0],[.5,0],[.58,.85],[.82,.85],[.92,0],[1,0]],
+  blink:[[0,1],[.9,1],[.95,.08],[1,1]]
+};
+const wrap=v=>v-Math.floor(v);
+/**
+ * Samples a waypoint list, easing between neighbouring points.
+ * @param {number} p - Progress from 0 to 1.
+ * @param {number[][]} path - Waypoints as [progress, value].
+ * @returns {number} Interpolated value.
+ */
+function sample(p,path){
+  if(p<=path[0][0])return path[0][1];
+  for(let i=1;i<path.length;i++){
+    const [t1,v1]=path[i];
+    if(p<=t1){
+      const [t0,v0]=path[i-1],k=t1===t0?1:(p-t0)/(t1-t0);
+      return v0+(v1-v0)*(k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2);
+    }
+  }
+  return path[path.length-1][1];
+}
+
+/**
+ * Renders the twin-e mark into a host element: two facing letter e's on one
+ * shared line, with a packet travelling between them while they take turns
+ * speaking. Set `data-face="0"` on the host to omit the face for small sizes.
+ * @param {HTMLElement} host - Element that receives the SVG.
+ * @returns {{vis: boolean, set: (ex: number, bk: number, still?: boolean) => void}}
+ *   Handle whose `set` applies the exchange and blink clocks (each 0 to 1).
+ */
+function twinE(host){
+  const id=++twinE.n,face=host.dataset.face!=='0',C=TE;
+  const st='fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"';
+  const eye=(cx,g,o,light)=>`<g data-o="${o}"><ellipse cx="${cx}" cy="43" rx="6.5" ry="6.5" fill="${C.ice}"/><ellipse cx="${cx+g}" cy="43" rx="3.3" ry="3.3" fill="${C.ink}"/>${light?`<ellipse cx="${cx+g+1.1}" cy="41.9" rx="1.1" ry="1.1" fill="${C.ice}"/>`:''}</g>`;
+  const bubble=(o,tail,col)=>`<g class="bb" data-o="${o}"><rect x="105.5" y="73" width="34" height="24" rx="9" fill="${col}"/><polygon points="${tail}" fill="${col}"/>${[10,17,24].map(d=>`<circle cx="${105.5+d}" cy="85" r="2.6" fill="${C.ink}"/>`).join('')}</g>`;
+  const lash=d=>`<path class="ls" d="${d}" stroke="${C.ice}" stroke-width="2.2" stroke-linecap="round" fill="none"/>`;
+  host.innerHTML=`<svg viewBox="15 15 220 90" aria-hidden="true"><defs>
+<radialGradient id="g${id}"><stop offset="0" stop-color="${C.ice}" stop-opacity=".55"/><stop offset="1" stop-color="${C.ice}" stop-opacity="0"/></radialGradient>
+<radialGradient id="b${id}"><stop offset="0" stop-color="${C.blush}"/><stop offset=".6" stop-color="${C.blush}" stop-opacity=".8"/><stop offset="1" stop-color="${C.blush}" stop-opacity="0"/></radialGradient></defs>
+<path d="M20 60H122.5" stroke="${C.teal}" ${st}/><path d="M122.5 60H225" stroke="${C.pink}" ${st}/>
+<path d="M100 60A40 40 0 1 0 91.5 84.6" stroke="${C.teal}" ${st}/><path d="M145 60A40 40 0 1 1 153.5 84.6" stroke="${C.pink}" ${st}/>
+${face?`<ellipse class="bl" cx="168.5" cy="51.5" rx="6" ry="3.6" fill="url(#b${id})"/><ellipse class="bl" cx="201.5" cy="51.5" rx="6" ry="3.6" fill="url(#b${id})"/>
+${eye(50,2.4,'him')}${eye(70,2.4,'him')}${eye(175,-2.4,'her',1)}${eye(195,-2.4,'her',1)}
+${lash('M167.86 40.4L163.54 38.83M169.63 37.63L166.37 34.37M172.4 35.86L170.83 31.54')}${lash('M202.14 40.4L206.46 38.83M200.37 37.63L203.63 34.37M197.6 35.86L199.17 31.54')}
+${bubble('him','105.5,76 105.5,88 96.5,79',C.teal)}${bubble('her','139.5,76 139.5,88 148.5,79',C.pink)}`:''}
+<circle class="pk" cy="60" r="14" fill="url(#g${id})"/><circle class="pk" cy="60" r="6.5" fill="${C.ice}"/></svg>`;
+  const q=s=>[...host.querySelectorAll(s)];
+  const pk=q('.pk'),bb=q('.bb'),bl=q('.bl'),eyes=q('g[data-o]:not(.bb)'),ls=q('.ls');
+  return{vis:true,set(ex,bk,still){
+    const px=20+(still?0:sample(ex,TW.packet))*205;
+    pk.forEach(c=>c.setAttribute('cx',px));
+    if(!face)return;
+    const sp={him:still?1:sample(ex,TW.speech),her:still?1:sample(wrap(ex-.5),TW.speech)};
+    const lid={him:still?1:sample(bk,TW.blink),her:still?1:sample(wrap(bk-.036),TW.blink)};
+    const b=still?.7:sample(ex,TW.blush);
+    bb.forEach(g=>g.setAttribute('opacity',sp[g.dataset.o]));
+    bl.forEach(e=>e.setAttribute('opacity',b));
+    eyes.forEach(g=>{
+      const v=lid[g.dataset.o],[sc,pu,li]=g.children;
+      sc.setAttribute('ry',6.5*v);pu.setAttribute('ry',3.3*v);
+      if(li){li.setAttribute('ry',1.1*v);li.setAttribute('cy',43-1.1*v)}
+    });
+    ls.forEach(l=>l.setAttribute('opacity',lid.her));
+  }};
+}
+twinE.n=0;
+
+/**
+ * Fills a `.logo` element with the full wordmark: "P", the animated twin-e
+ * mark and "ry". Every logo on the page is rendered through this function.
+ * @param {HTMLElement} host - Element whose content becomes the wordmark.
+ * @returns {ReturnType<typeof twinE>} Animation handle for the mark.
+ */
+function renderLogo(host){
+  host.innerHTML='P<span class="te"></span><i>ry</i>';
+  return twinE(host.querySelector('.te'));
+}
+const marks=[...document.querySelectorAll('.logo')].map(h=>{
+  const m=renderLogo(h);
+  new IntersectionObserver(([e])=>{m.vis=e.isIntersecting}).observe(h);
+  return m;
+});
+/** Advances every visible logo on shared clocks: an 8s exchange and a 5s blink cycle. */
+function logos(now){
+  marks.forEach(m=>m.vis&&m.set((now%8000)/8000,(now%5000)/5000,calm));
+  if(!calm)requestAnimationFrame(logos);
+}
+requestAnimationFrame(logos);
+</script>
+</body>
+</html>
